@@ -1,0 +1,15 @@
+[project]
+name = "ComfyUI_PromptAttention"
+description = "Prompt parser which applies attention bias instead of weights. Use '<' and '>' to enclose it and '=1.0' to specify attention strength. Example: 'This is <a huge dog=1.25>'."
+version = "0.0.1"
+license = {file = "LICENSE"}
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/silveroxides/ComfyUI_PromptAttention"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "silveroxides"
+DisplayName = "Encode Prompt with Attention Bias"
+Icon = ""
