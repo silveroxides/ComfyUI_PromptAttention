@@ -25,9 +25,9 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
         """
         if not text:
             return 0
-        
+
         tokens = clip.tokenize(text)
-        
+
         max_content_len = 0
         for key in tokens:
             if len(tokens[key]) > 0 and len(tokens[key][0]) > 0:
@@ -35,7 +35,7 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
                 content_len = len(tokens[key][0]) - 2
                 if content_len > max_content_len:
                     max_content_len = content_len
-        
+
         return max(0, max_content_len)
 
     def encode(self, clip, text):
@@ -54,7 +54,7 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
         clean_text = ""
         biases_to_apply = []
 
-        current_token_index = 1 
+        current_token_index = 1
 
         for segment in segments:
             if not segment:
@@ -66,12 +66,12 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
                 strength = float(strength_str)
                 clean_text += bias_text
                 num_tokens = self._get_token_count(clip, bias_text)
-                
+
                 if num_tokens > 0:
                     start_index = current_token_index
                     end_index = current_token_index + num_tokens
                     biases_to_apply.append({"start": start_index, "end": end_index, "strength": strength})
-                
+
                 current_token_index += num_tokens
             else:
                 clean_text += segment
@@ -80,7 +80,7 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
 
         tokens = clip.tokenize(clean_text)
         cond, pooled = clip.encode_from_tokens(tokens, return_pooled=True)
-        
+
         if not biases_to_apply:
             return ([[cond, {"pooled_output": pooled}]], )
 
@@ -104,13 +104,13 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
 
             if start >= end:
                 continue
-            
+
             attn_mask[:, :, start:end] += attn_bias_value
             attn_mask[:, start:end, :] += attn_bias_value
-        
+
         cond_dict["attention_mask"] = attn_mask
         cond_dict["attention_mask_img_shape"] = (1, 1)
-            
+
         return ([[cond, cond_dict]],)
 
 NODE_CLASS_MAPPINGS = {
@@ -121,4 +121,3 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "CLIPTextEncodeAttentionBias": "CLIP Text Encode (w Attention Bias)",
 
 }
-
