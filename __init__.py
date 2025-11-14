@@ -13,7 +13,6 @@ class CLIPTextEncodeAttentionBias(ComfyNodeABC):
                 "clip": (IO.CLIP, {"tooltip": "The CLIP model used for encoding the text."}),
             }
         }
-
     RETURN_TYPES = (IO.CONDITIONING,)
     FUNCTION = "encode"
     CATEGORY = "conditioning"
@@ -119,5 +118,4 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CLIPTextEncodeAttentionBias": "CLIP Text Encode (w Attention Bias)",
-
 }
