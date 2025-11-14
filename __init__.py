@@ -6,7 +6,7 @@ from comfy.comfy_types import IO, ComfyNodeABC, InputTypeDict
 
 class CLIPTextEncodeAttentionBias(ComfyNodeABC):
     @classmethod
-    def INPUT_TYPES(s): -> InputTypeDict:
+    def INPUT_TYPES(s) -> InputTypeDict:
         return {
             "required": {
                 "text": (IO.STRING, {"multiline": True, "dynamicPrompts": True, "tooltip": "The text to be encoded."}),
@@ -119,3 +119,4 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CLIPTextEncodeAttentionBias": "CLIP Text Encode (w Attention Bias)",
 }
+
