@@ -3,12 +3,12 @@ import re
 import comfy.model_management
 import copy
 
-class CLIPTextEncodeWithAttentionBias:
+class CLIPTextEncodeAttentionBias:
     @classmethod
     def INPUT_TYPES(s):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "dynamicPrompts": True}),
+                "text": ("STRING", {"multiline": True, "dynamicPrompts": True, "tooltip": "Prompt parser which applies attention bias instead of weights. Use '<' and '>' to enclose it and '=1.0' to specify attention strength. Example: 'This is <a huge dog=1.25>'"}),
                 "clip": ("CLIP",),
             }
         }
@@ -110,9 +110,10 @@ class CLIPTextEncodeWithAttentionBias:
         return ([[cond, cond_dict]],)
 
 NODE_CLASS_MAPPINGS = {
-    "CLIPTextEncodeWithAttentionBias": CLIPTextEncodeWithAttentionBias,
+    "CLIPTextEncodeAttentionBias": CLIPTextEncodeAttentionBias,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "CLIPTextEncodeWithAttentionBias": "Text Encode with Attention Bias",
+    "CLIPTextEncodeAttentionBias": "CLIP Text Encode (w Attention Bias)",
+
 }
