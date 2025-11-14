@@ -2,20 +2,22 @@ import torch
 import re
 import comfy.model_management
 import copy
+from comfy.comfy_types import IO, ComfyNodeABC, InputTypeDict
 
-class CLIPTextEncodeAttentionBias:
+class CLIPTextEncodeAttentionBias(ComfyNodeABC):
     @classmethod
-    def INPUT_TYPES(s):
+    def INPUT_TYPES(s): -> InputTypeDict:
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "dynamicPrompts": True, "tooltip": "Prompt parser which applies attention bias instead of weights. Use '<' and '>' to enclose it and '=1.0' to specify attention strength. Example: 'This is <a huge dog=1.25>'"}),
-                "clip": ("CLIP",),
+                "text": (IO.STRING, {"multiline": True, "dynamicPrompts": True, "tooltip": "The text to be encoded."}),
+                "clip": (IO.CLIP, {"tooltip": "The CLIP model used for encoding the text."}),
             }
         }
 
-    RETURN_TYPES = ("CONDITIONING",)
+    RETURN_TYPES = (IO.CONDITIONING,)
     FUNCTION = "encode"
     CATEGORY = "conditioning"
+    DESCRIPTION = "Prompt parser which applies attention bias instead of weights. Use '<' and '>' to enclose it and '=1.0' to specify attention strength. Example: 'This is <a huge dog=1.25>'."
 
     def _get_token_count(self, clip, text):
         """
@@ -37,6 +39,8 @@ class CLIPTextEncodeAttentionBias:
         return max(0, max_content_len)
 
     def encode(self, clip, text):
+        if clip is None:
+            raise RuntimeError("ERROR: clip input is invalid: None\n\nIf the clip is from a checkpoint loader node your checkpoint does not contain a valid clip or text encoder model.")
 
         if '<' not in text and '>' not in text and '=' not in text:
             tokens = clip.tokenize(text)
@@ -117,3 +121,4 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "CLIPTextEncodeAttentionBias": "CLIP Text Encode (w Attention Bias)",
 
 }
+
